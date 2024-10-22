@@ -6,6 +6,5 @@ pub struct User {
 }
 
 impl User {
-    pub const SEED_PREFIX: &'static str = "USER";
+    pub const SEED_PREFIX:&'static str = "USER";
 }
-3
