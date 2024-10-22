@@ -1,9 +1,16 @@
 use borsh::BorshSerialize;
 use solana_program::{
-    account_info::{ next_account_info, AccountInfo}, address_lookup_table::program, entrypoint::ProgramResult, program::invoke_signed, pubkey::Pubkey, rent::Rent, system_instruction, sysvar::Sysvar
+    account_info::{ 
+        next_account_info, AccountInfo},
+        entrypoint::ProgramResult, 
+        program::invoke_signed, 
+        pubkey::Pubkey, 
+        rent::Rent, 
+        system_instruction, 
+        sysvar::Sysvar
 };
 
-use crate::state::{user::User, User};
+use crate::state::User;
 
 pub fn create_user(
     program_id: &Pubkey,
@@ -38,13 +45,13 @@ pub fn create_user(
         &[
             payer.clone(),
             target_account.clone(),
-            system_program.clone()
+            system_account.clone(),
         ],
         &[&[User::SEED_PREFIX.as_bytes(), payer.key.as_ref(), &[bump]]],
     )?;
 
     // serializing the data to send to the blockchain
-    data.serialize(&mut &mut target_account.try_borrow_mut_data()[..])?;
+    data.serialize(&mut &mut target_account.try_borrow_mut_data()?.as_mut())?;
     Ok(())
 }
     
