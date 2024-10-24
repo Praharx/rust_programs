@@ -18,7 +18,7 @@ pub fn create_new_account(
     let _system_program = next_account_info(account_iter)?;
 
     // creating a new pda
-    let (rent_vault_pda, rent_vaut_bump) = 
+    let (rent_vault_pda, _rent_vaut_bump) = 
     Pubkey::find_program_address(&[RentVault::SEED_PREFIX.as_bytes()], program_id);
     assert!(rent_vault.key.eq(&rent_vault_pda));
 
