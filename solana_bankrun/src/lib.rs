@@ -1,0 +1,62 @@
+use borsh::{BorshSerialize, BorshDeserialize};
+use solana_program::{
+    account_info::{next_account_info, AccountInfo},
+    declare_id,
+    entrypoint::ProgramResult,
+    msg,
+    program_error::ProgramError,
+    pubkey::Pubkey,
+};
+
+mod state;
+use state::*;
+
+declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+
+use solana_program::entrypoint;
+entrypoint!(process_instruction);
+
+pub fn process_instruction(
+    _program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    instruction_data: &[u8]
+) -> ProgramResult {
+    msg!("Hello this is a counter program!");
+    // splitting the instruction data to check the instruction identifier.
+    // splits at creates two arrays.
+    let (instruction_discriminant, _insturction_data_inner) = instruction_data.split_at(1);
+    match instruction_discriminant[0] {
+        0 => {
+            msg!("Instruction: Increment");
+            process_increment_counter(accounts, instruction_data)?;
+        }
+        _ => {
+            msg!("Error: unknown instruction")
+        }
+    }
+    Ok(())
+}
+
+
+pub fn process_increment_counter(
+    accounts: &[AccountInfo],
+    _instruction_data: &[u8],
+) -> Result<(), ProgramError> {
+   
+    let account_iter = &mut accounts.iter();
+    //checking if the data is writable
+    let counter_account = next_account_info(account_iter)?;
+    assert!(
+        counter_account.is_writable,
+        "Counter account must be writable"
+    );
+    //deserializing data 
+    let mut counter = Counter::try_from_slice(&counter_account.try_borrow_mut_data()?)?;
+    counter.count += 1;
+    // serializing it back again
+    counter.serialize(&mut *counter_account.data.borrow_mut())?;
+    msg!("Counter state incremented to {:?}", counter.count);
+    Ok(())
+}
+
+
