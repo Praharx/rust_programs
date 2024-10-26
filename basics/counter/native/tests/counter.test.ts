@@ -1,4 +1,4 @@
-import { describe, test } from 'node:test';
+aaimport { describe, test } from 'node:test';
 import { Keypair, PublicKey, SystemProgram, Transaction, type TransactionInstruction } from '@solana/web3.js';
 import { assert } from 'chai';
 import { start } from 'solana-bankrun';
@@ -13,7 +13,7 @@ describe('Counter Solana Native', async () => {
   // Get the rent object to calculate rent for the accounts
   const rent = await client.getRent();
 
-  test('Test allocate counter + increment tx', async () => {
+  test('Test allocate counter + increment tx', () => {
     // Randomly generate the account key
     // to sign for setting up the Counter state
     const counterKeypair = Keypair.generate();
@@ -37,7 +37,7 @@ describe('Counter Solana Native', async () => {
     const blockhash = context.lastBlockhash;
     tx.recentBlockhash = blockhash;
 
-    // Sign the transaction with the payer's keypair
+    // Sign the transaction with the payer's keypFair
     tx.sign(payer, counterKeypair);
 
     // Send transaction to bankrun
